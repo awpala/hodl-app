@@ -1,0 +1,45 @@
+.user-input {
+  width: 80vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: flex-start;
+
+  .selections {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .selection {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 200px;
+  }
+
+  .days-range {
+    color: darkgreen;
+    font-weight: bold;
+  }
+
+  .graph-attributes {
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn-normalize {
+    margin-top: 30px;
+  }
+
+  input {
+    width: 80px;
+  }
+
+  button {
+    background-color: limegreen;
+  }
+}
