@@ -15,8 +15,8 @@ To develop and deploy this app locally:
 
 This simple Web application plots the per-coin price for five popular cryptocurrencies: `bitcoin`, `ethereum`, `dogecoin`, `polkadot`, and `monero`.
 
-The use has the ability to select which cryptocurrencies to add to the chart. Additionally, the user can input a custom range (in days) to view historic price data. When viewed in de-normalized form, the prices are shown in `USD/coin` (logarithmic scale). Additionally, the user can select "Normalize" to normalize price data relative to `1.0` as the all-time high price (linear scale).
+The user has the ability to select which cryptocurrencies to add to the chart. Additionally, the user can input a custom range (in days) to view historic price data dynamically. When viewed in de-normalized form, the prices are shown in `USD/coin` (*logarithmic scale* in y-axis). Additionally, the user can select "Normalize" to normalize price data relative to `1.0` as the all-time high price (*linear scale* in y-axis).
 
-The price data is obtained via third-party API [CoinGecko](https://www.coingecko.com/en/api/). No API key is required to make HTTP requests to this API. Additionally, this application uses the companion [Node.js Client](https://github.com/miscavage/CoinGecko-API) wrapper to make the HTTP requests.
+The price data is obtained via third-party API [CoinGecko](https://www.coingecko.com/en/api/). No API key is required to make HTTP requests to this API. Additionally, this application uses the companion [Node.js Client](https://github.com/miscavage/CoinGecko-API) wrapper to make the HTTP requests (see `/src/views/Home/Home.js`).
 
 The chart is generated via [react-chartjs-2](https://github.com/reactchartjs/react-chartjs-2), which additionally includes the co-dependency [Chart.js](https://www.chartjs.org/docs/latest/).

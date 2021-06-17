@@ -26,9 +26,10 @@ const Home = ({
 
   const getData = async (cryptos, daysRange) => {
     const cryptosData = {};
-    
+
+    // get full data set to determine maximum price value
     const allDays = 10000;
-  
+
     const params = {
       days: allDays,
       vs_currency: 'usd',
@@ -41,9 +42,11 @@ const Home = ({
       cryptosData[crypto].prices = prices;
     }
     
+    // parse API data for each cryptocurrency
     for (let crypto in cryptosData) {
       const cryptoData = cryptosData[crypto];
   
+      // determine maximum all-time price
       let maxPrice = 0;
       for (let priceData of cryptoData.prices) {
         if (priceData[1] >= maxPrice) {
@@ -52,13 +55,16 @@ const Home = ({
       }
       cryptoData.maxPrice = maxPrice;
   
+      // extract price data over user-specified `daysRange` (regular and normalized forms)
       const dataArray = cryptoData.prices;
       cryptoData.pricesData = dataArray.slice(dataArray.length - daysRange).map(priceData => priceData[1]);
       cryptoData.normalizedPricesData = cryptoData.pricesData.map(price => price/maxPrice);
   
+      // remove superfluous raw price data
       delete cryptoData.prices;
     }
   
+    // update redux
     setCryptoData(cryptosData);
   }
 
