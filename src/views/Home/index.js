@@ -1,17 +1,16 @@
 import { connect } from 'react-redux';
-import { setCryptoData } from '../../reducers/crypto';
+import { setCryptosList } from '../../reducers/crypto';
 import Home from './Home';
 
 const mapStateToProps = (state) => {
-  const { crypto: { cryptos, daysRange } } = state;
+  const { crypto: { cryptosData } } = state;
   return {
-    cryptos,
-    daysRange,
-  };
+    cryptosData,
+  }
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  setCryptoData: (cryptoData) => dispatch(setCryptoData(cryptoData)),
+  setCryptosList: (cryptosList) => dispatch(setCryptosList(cryptosList)),
 });
 
 const HomeContainer = connect(

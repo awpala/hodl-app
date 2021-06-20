@@ -6,9 +6,8 @@ import CoinGecko from 'coingecko-api';
 import './Home.scss';
 
 const Home = ({
-  cryptos,
-  daysRange,
-  setCryptoData,
+  cryptosData,
+  setCryptosList,
 }) => {
   const CoinGeckoClient = new CoinGecko();
 
@@ -20,72 +19,38 @@ const Home = ({
     setGecko(gecko_says);
   }
 
-  useEffect(() => {
-    getGecko();
-  }, []);
-
-  const getData = async (cryptos, daysRange) => {
-    const cryptosData = {};
-
-    // get full data set to determine maximum price value
-    const allDays = 10000;
-
-    const params = {
-      days: allDays,
-      vs_currency: 'usd',
-      interval: 'daily',
-    };
-  
-    for (let crypto of cryptos) {
-      cryptosData[crypto] = {};
-      const { data: { prices } } = await CoinGeckoClient.coins.fetchMarketChart(crypto, params);
-      cryptosData[crypto].prices = prices;
-    }
-    
-    // parse API data for each cryptocurrency
-    for (let crypto in cryptosData) {
-      const cryptoData = cryptosData[crypto];
-  
-      // determine maximum all-time price
-      let maxPrice = 0;
-      for (let priceData of cryptoData.prices) {
-        if (priceData[1] >= maxPrice) {
-          maxPrice = priceData[1];
-        }
-      }
-      cryptoData.maxPrice = maxPrice;
-  
-      // extract price data over user-specified `daysRange` (regular and normalized forms)
-      const dataArray = cryptoData.prices;
-      cryptoData.pricesData = dataArray.slice(dataArray.length - daysRange).map(priceData => priceData[1]);
-      cryptoData.normalizedPricesData = cryptoData.pricesData.map(price => price/maxPrice);
-  
-      // remove superfluous raw price data
-      delete cryptoData.prices;
-    }
-  
-    // update redux
-    setCryptoData(cryptosData);
+  const getInitialData = async () => {
+    const { data } = await CoinGeckoClient.coins.list();
+    setCryptosList([...data]);
   }
 
   useEffect(() => {
-    getData(cryptos, daysRange);
-  }, [cryptos, daysRange]);
+    getGecko();
+    getInitialData();
+  }, []);
 
   return (
     <div className='home'>
-      <h1>{gecko}</h1>
-      <h2>🚀🌙</h2>
+      <h1 className='home-gecko'>{gecko}</h1>
+      <h2 className='home-emojis'>🚀🌙</h2>
+      {cryptosData && <Chart isNormalized={isNormalized} />}
       <UserInput setIsNormalized={setIsNormalized} isNormalized={isNormalized} />
-      <Chart isNormalized={isNormalized} />
     </div>
   );
 }
 
 Home.propTypes = {
-  cryptos: PropTypes.array.isRequired,
-  daysRange: PropTypes.number.isRequired,
-  setCryptoData: PropTypes.func.isRequired,
+  // redux state
+  cryptosData: PropTypes.shape({
+    crypto: PropTypes.shape({
+      pricesData: PropTypes.arrayOf(PropTypes.number),
+      normalizedPricesData: PropTypes.arrayOf(PropTypes.number),
+      maxPrice: PropTypes.number,
+      maxPriceDate: PropTypes.string,
+    }),
+  }).isRequired,
+  // redux actions
+  setCryptosList: PropTypes.func.isRequired,
 };
 
 export default Home;
