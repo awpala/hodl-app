@@ -2,10 +2,17 @@ import { connect } from 'react-redux';
 import Chart from './Chart';
 
 const mapStateToProps = (state) => {
-  const { crypto: { cryptoData, daysRange } } = state;
+  const {
+    crypto: {
+      cryptosData,
+      addedCryptos,
+      dates,
+    }
+  } = state;
   return {
-    cryptoData,
-    daysRange,
+    cryptosData,
+    addedCryptos,
+    dates,
   };
 }
 

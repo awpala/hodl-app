@@ -13,7 +13,7 @@ To develop and deploy this app locally:
 
 ## Overview and Third-Party Dependencies
 
-This simple Web application plots the per-coin price for five popular cryptocurrencies: `bitcoin`, `ethereum`, `dogecoin`, `polkadot`, and `monero`.
+This simple Web application plots the per-coin price for five popular cryptocurrencies: `bitcoin`, `ethereum`, `dogecoin`, `cardano`, and `monero`.
 
 The user has the ability to select which cryptocurrencies to add to the chart. Additionally, the user can input a custom range (in days) to view historic price data dynamically. When viewed in de-normalized form, the prices are shown in `USD/coin` (*logarithmic scale* in y-axis). Additionally, the user can select "Normalize" to normalize price data relative to `1.0` as the all-time high price (*linear scale* in y-axis).
 

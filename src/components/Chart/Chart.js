@@ -1,70 +1,80 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Line } from 'react-chartjs-2';
 import {
   BITCOIN,
   ETHEREUM,
   DOGECOIN,
-  POLKADOT,
+  CARDANO,
   MONERO,
 } from '../../constants';
 import './Chart.scss';
 
 const Chart = ({
+  cryptosData,
+  addedCryptos,
+  dates,
   isNormalized,
-  cryptoData,
-  daysRange,
 }) => {
+  const initializeColors = () => {
+      const initialColors = {};
+      initialColors[BITCOIN] = 'red';
+      initialColors[ETHEREUM] = 'blue';
+      initialColors[MONERO] = 'black';
+      initialColors[CARDANO] = 'violet';
+      initialColors[DOGECOIN] = 'green';
+
+      return initialColors;
+  }
+
+  const [cryptoColors, setCryptoColors] = useState(initializeColors());
+
+  const cryptos = [...new Set(addedCryptos)];
   const dataSets = [];
 
-  const mapDataToColor = (crypto) => {
-    let color;
+  const getRandomColor = () => {
+    const hexCodes = '0123456789ABCDEF';
+    let color = '#'
 
-    switch (crypto) {
-      case BITCOIN: color = 'red'; break;
-      case ETHEREUM: color = 'blue'; break;
-      case DOGECOIN: color = 'green'; break;
-      case POLKADOT: color = 'purple'; break;
-      case MONERO: color = 'white'; break;
-      default: color = 'black'; break;
+    for (let i = 0; i < 6; i++) {
+      color += hexCodes[Math.floor(Math.random() * 16)];
     }
 
     return color;
   }
 
-  for (let crypto in cryptoData) {
-    const label = crypto;
+  for (let crypto of cryptos) {
+    if (cryptosData[crypto]) {
+      const label = crypto;
 
-    const cryptoPrices = cryptoData[crypto];
-    const data = !isNormalized ? cryptoPrices.pricesData : cryptoPrices.normalizedPricesData;
+      const { pricesData, normalizedPricesData } = cryptosData[crypto];
+      const data = !isNormalized ? pricesData : normalizedPricesData;
 
-    dataSets.push({ 
-      label,
-      data,
-      backgroundColor: mapDataToColor(crypto),
-      borderColor: mapDataToColor(crypto),
-      fill: false,
-    });
-  }
+      if (!cryptoColors[crypto]) {
+        const updatedColors = { ...cryptoColors };
+        updatedColors[crypto] = getRandomColor();
+        setCryptoColors(updatedColors);
+      }
 
-  const xLabels = [];
-  for (let i = 0; i < daysRange; i++) {
-    xLabels.push((i + 1) + '');
+      dataSets.push({ 
+        label,
+        data,
+        backgroundColor: cryptoColors[crypto],
+        borderColor: cryptoColors[crypto],
+        fill: false,
+      });
+    }
   }
 
   const chartData = {
     datasets: dataSets,
-    labels: xLabels,
-  }
+    labels: dates,
+  };
 
   const options = {
     scales: {
       yAxis: {
         type: !isNormalized ? 'logarithmic' : 'linear',
-        scaleLabel: {
-          display: true,
-          labelString: !isNormalized ? 'USD' : 'fraction of max',
-        },
       },
     }
   };
@@ -77,15 +87,19 @@ const Chart = ({
 }
 
 Chart.propTypes = {
-  isNormalized: PropTypes.bool.isRequired,
-  cryptoData: PropTypes.shape({
+  // redux state
+  cryptosData: PropTypes.shape({
     crypto: PropTypes.shape({
-      pricesData: PropTypes.array,
-      normalizedPricesData: PropTypes.array,
+      pricesData: PropTypes.arrayOf(PropTypes.number),
+      normalizedPricesData: PropTypes.arrayOf(PropTypes.number),
       maxPrice: PropTypes.number,
+      maxPriceDate: PropTypes.string,
     }),
   }).isRequired,
-  daysRange: PropTypes.number.isRequired,
+  addedCryptos: PropTypes.arrayOf(PropTypes.string),
+  dates: PropTypes.arrayOf(PropTypes.string),
+  // props
+  isNormalized: PropTypes.bool.isRequired,
 };
 
 export default Chart;
