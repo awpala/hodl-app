@@ -8,7 +8,7 @@ export const MONERO = 'monero';
 export default {
   BITCOIN,
   ETHEREUM,
-  DOGECOIN,
-  CARDANO,
   MONERO,
+  CARDANO,
+  DOGECOIN,
 };

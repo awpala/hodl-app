@@ -5,9 +5,9 @@ import { calculateDates } from '../../utils';
 import {
   BITCOIN,
   ETHEREUM,
-  DOGECOIN,
-  CARDANO,
   MONERO,
+  CARDANO,
+  DOGECOIN,
 } from '../../constants';
 import './UserInput.scss';
 
@@ -27,9 +27,9 @@ const UserInput = ({
   const initialCryptos = [
     BITCOIN,
     ETHEREUM,
-    DOGECOIN,
-    CARDANO,
     MONERO,
+    CARDANO,
+    DOGECOIN,
   ];
 
   const [daysSelection, setDaysSelection] = useState(daysRange);
@@ -133,14 +133,15 @@ const UserInput = ({
             cryptoData.normalizedPricesData.unshift(null);
           }
         } else {
-          cryptoData.pricesData = cryptoPrices.slice(cryptoPrices.length - daysRange).map(priceData => priceData[1]);
+          const updatedDaysRange = cryptoPrices.length - daysRange;
+          cryptoData.pricesData = cryptoPrices.slice(updatedDaysRange).map(priceData => priceData[1]);
           cryptoData.normalizedPricesData = cryptoData.pricesData.map(price => price/maxPrice);
         }
       }
       setCryptosData(updatedCryptosData);
       setDates(calculateDates(daysRange));
   }
-  
+
   useEffect(() => {
     setCurrentCryptos(addedCryptos);
     setUpdatedCryptos(addedCryptos, daysRange);
@@ -178,7 +179,7 @@ const UserInput = ({
         <input
           type='text'
           placeholder='enter number'
-          onChange={(e) => setDaysSelection(e.target.value)}
+          onChange={(e) => setDaysSelection(Number(e.target.value))}
         />
         <button onClick={() => handleUpdateDays('update')}>Update</button>
         <button onClick={() => handleUpdateDays('cancel')}>Cancel</button>

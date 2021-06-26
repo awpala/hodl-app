@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Line } from 'react-chartjs-2';
+import {
+  BITCOIN,
+  ETHEREUM,
+  DOGECOIN,
+  CARDANO,
+  MONERO,
+} from '../../constants';
 import './Chart.scss';
 
 const Chart = ({
@@ -9,7 +16,18 @@ const Chart = ({
   dates,
   isNormalized,
 }) => {
-  const [cryptoColors, setCryptoColors] = useState({});
+  const initializeColors = () => {
+      const initialColors = {};
+      initialColors[BITCOIN] = 'red';
+      initialColors[ETHEREUM] = 'blue';
+      initialColors[MONERO] = 'black';
+      initialColors[CARDANO] = 'violet';
+      initialColors[DOGECOIN] = 'green';
+
+      return initialColors;
+  }
+
+  const [cryptoColors, setCryptoColors] = useState(initializeColors());
 
   const cryptos = [...new Set(addedCryptos)];
   const dataSets = [];
@@ -29,8 +47,8 @@ const Chart = ({
     if (cryptosData[crypto]) {
       const label = crypto;
 
-      const cryptoData = cryptosData[crypto];
-      const data = !isNormalized ? cryptoData.pricesData : cryptoData.normalizedPricesData;
+      const { pricesData, normalizedPricesData } = cryptosData[crypto];
+      const data = !isNormalized ? pricesData : normalizedPricesData;
 
       if (!cryptoColors[crypto]) {
         const updatedColors = { ...cryptoColors };
